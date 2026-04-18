@@ -13,21 +13,28 @@ CUENTA_ANTIGUA = False
 
 def test_escenario_e1():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
-  [folio, errores] = payflow.realizar_inversion(CAPITAL_INVALIDO, PERFIL_ALTO_RIESGO, DURACION_AÑOS_INVALIDO)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_INVALIDO, DURACION_AÑOS_INVALIDO)
 
   assert folio == None
   assert errores != None  
 
 def test_escenario_e2():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
-  [folio, errores] = payflow.realizar_inversion(CAPITAL_VALIDO, PERFIL_ALTO_RIESGO, DURACION_AÑOS_VALIDO)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_VALIDO,  DURACION_AÑOS_VALIDO)
 
   assert folio == None
   assert errores != None
 
 def test_escenario_e3():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
-  [folio, errores] = payflow.realizar_inversion(CAPITAL_INVALIDO, PERFIL_ALTO_RIESGO, DURACION_AÑOS_VALIDO)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_INVALIDO, DURACION_AÑOS_VALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e4():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_INVALIDO, DURACION_AÑOS_VALIDO)
 
   assert folio == None
   assert errores != None
