@@ -1,5 +1,5 @@
 from capa_superior import Payflow, ERROR_CUENTA_NUEVA, ERROR_CAPITAL_EXCEDIDO
-from capa_inferior import ERROR_PLAZO_INVALIDO, ERROR_CAPITAL_INVALIDO
+from capa_inferior import calcular_monto_alto_riesgo, calcular_monto_bajo_riesgo, ERROR_PLAZO_INVALIDO, ERROR_CAPITAL_INVALIDO
 
 SALDO = 12_000
 DURACION_MESES_VALIDO = 12
@@ -72,7 +72,9 @@ def test_escenario_e8():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_VALIDO)
 
-  assert folio != None
+  inversion = calcular_monto_alto_riesgo(CAPITAL_RIESGO, DURACION_MESES_VALIDO)
+
+  assert folio == f"A-R-{int(inversion)}"
   assert errores == None
 
 def test_escenario_e9():
@@ -103,7 +105,9 @@ def test_escenario_e12():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
 
-  assert folio != None
+  inversion = calcular_monto_alto_riesgo(CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
+
+  assert folio == f"A-E-{int(inversion)}"
   assert errores == None
 
 def test_escenario_e13():
@@ -147,7 +151,9 @@ def test_escenario_e18():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_VALIDO)
 
-  assert folio != None
+  inversion = calcular_monto_bajo_riesgo(CAPITAL_RIESGO, DURACION_MESES_VALIDO)
+
+  assert folio == f"B-R-{int(inversion)}"
   assert errores == None
 
 def test_escenario_e19():
@@ -161,7 +167,9 @@ def test_escenario_e20():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_VALIDO)
 
-  assert folio != None
+  inversion = calcular_monto_bajo_riesgo(CAPITAL_RIESGO, DURACION_MESES_VALIDO)
+
+  assert folio == f"B-R-{int(inversion)}"
   assert errores == None
 
 def test_escenario_e21():
@@ -176,7 +184,9 @@ def test_escenario_e22():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
 
-  assert folio != None
+  inversion = calcular_monto_bajo_riesgo(CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
+
+  assert folio == f"B-E-{int(inversion)}"
   assert errores == None
 
 def test_escenario_e23():
@@ -191,5 +201,7 @@ def test_escenario_e24():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
 
-  assert folio != None
+  inversion = calcular_monto_bajo_riesgo(CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
+
+  assert folio == f"B-E-{int(inversion)}"
   assert errores == None

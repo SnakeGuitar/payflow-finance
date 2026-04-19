@@ -4,6 +4,6 @@ def generar_resultado(es_alto_riesgo: bool, capital: float, plazo_años: float, 
     [inversion, errores] = calcular_monto(es_alto_riesgo, capital, plazo_años)
     
     if errores == None:
-        return [f"{"A" if es_alto_riesgo else "B"}-{"R" if estado == "INVERSION_RIESGOSA" else "INVERSION_ESTABLE"}-{int(inversion)}", None]
+        return [f"{"A" if es_alto_riesgo else "B"}-{"R" if estado == "INVERSION_RIESGOSA" else "E"}-{int(inversion)}", None]
     
     return [None, errores]

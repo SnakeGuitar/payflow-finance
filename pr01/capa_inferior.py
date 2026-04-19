@@ -1,4 +1,3 @@
-
 TASA_ALTO_RIESGO_ANUAL = 0.12
 TASA_BAJO_RIESGO_ANUAL = 0.05
 ERROR_PLAZO_INVALIDO = "El plazo no puede ser menor a 1 año"
@@ -10,7 +9,7 @@ def calcular_monto_alto_riesgo(capital: float, plazo_meses: float):
 def calcular_monto_bajo_riesgo(capital: float, plazo_meses: float):
   return capital * (1 + TASA_BAJO_RIESGO_ANUAL) ** plazo_meses
 
-def obtener_errores_de_capa_inferior(es_alto_riesgo: bool, capital: float, plazo_meses: float):
+def obtener_errores_de_capa_inferior(capital: float, plazo_meses: float):
   errores = {
     "error-plazo-invalido": None,
     "error-capital-invalido": None
@@ -29,7 +28,7 @@ def obtener_errores_de_capa_inferior(es_alto_riesgo: bool, capital: float, plazo
     return errores
 
 def calcular_monto(es_alto_riesgo: bool, capital: float, plazo_meses: float):
-  errores = obtener_errores_de_capa_inferior(es_alto_riesgo, capital, plazo_meses)
+  errores = obtener_errores_de_capa_inferior(capital, plazo_meses)
   
   if errores != None:
     return [None, errores]

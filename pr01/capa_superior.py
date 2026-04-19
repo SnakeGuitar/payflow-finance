@@ -35,14 +35,14 @@ class Payflow:
     errores = obtener_errores_de_capa_superior(es_alto_riesgo, self.cuenta_nueva, capital, self.saldo)
 
     if errores != None:
-      errores_capa_inferior = obtener_errores_de_capa_inferior(es_alto_riesgo, capital, plazo_meses)
+      errores_capa_inferior = obtener_errores_de_capa_inferior(capital, plazo_meses)
       
       if errores_capa_inferior != None:
         errores.update(errores_capa_inferior)
 
       return [None, errores]
 
-    if es_alto_riesgo:
+    if capital >= self.saldo / 2:
       self.estado = "INVERSION_RIESGOSA"
     else:
       self.estado = "INVERSION_ESTABLE"
