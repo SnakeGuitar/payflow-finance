@@ -5,6 +5,7 @@ DURACION_AÑOS_VALIDO = 1
 DURACION_AÑOS_INVALIDO = 0.5
 CAPITAL_RIESGO = SALDO / 2
 CAPITAL_RIESGO_ARRIBA = SALDO + 1
+CAPITAL_ESTABLE = SALDO / 4
 CAPITAL_INVALIDO = 0
 PERFIL_ALTO_RIESGO = True
 PERFIL_BAJO_RIESGO = False
@@ -63,6 +64,118 @@ def test_escenario_e7():
 def test_escenario_e8():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO, DURACION_AÑOS_VALIDO)
+
+  assert folio != None
+  assert errores == None
+
+def test_escenario_e9():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_AÑOS_INVALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e10():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_AÑOS_VALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e11():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_AÑOS_INVALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e12():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_AÑOS_VALIDO)
+
+  assert folio != None
+  assert errores == None
+
+def test_escenario_e13():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_AÑOS_INVALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e14():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_AÑOS_VALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e15():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_AÑOS_INVALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e16():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_AÑOS_VALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e17():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO, DURACION_AÑOS_INVALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e18():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO, DURACION_AÑOS_VALIDO)
+
+  assert folio != None
+  assert errores == None
+
+def test_escenario_e19():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO, DURACION_AÑOS_INVALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e20():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO, DURACION_AÑOS_VALIDO)
+
+  assert folio != None
+  assert errores == None
+
+def test_escenario_e21():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_AÑOS_INVALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e22():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_AÑOS_VALIDO)
+
+  assert folio != None
+  assert errores == None
+
+def test_escenario_e23():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_AÑOS_INVALIDO)
+
+  assert folio == None
+  assert errores != None
+
+def test_escenario_e24():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_AÑOS_VALIDO)
 
   assert folio != None
   assert errores == None
