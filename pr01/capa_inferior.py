@@ -10,7 +10,7 @@ def calcular_monto_alto_riesgo(capital: float, plazo_meses: float):
 def calcular_monto_bajo_riesgo(capital: float, plazo_meses: float):
   return capital * (1 + TASA_BAJO_RIESGO_ANUAL) ** plazo_meses
 
-def calcular_monto(es_alto_riesgo: bool, capital: float, plazo_meses: float):
+def obtener_errores_de_capa_inferior(es_alto_riesgo: bool, capital: float, plazo_meses: float):
   errores = {
     "error-plazo-invalido": None,
     "error-capital-invalido": None
@@ -26,6 +26,12 @@ def calcular_monto(es_alto_riesgo: bool, capital: float, plazo_meses: float):
     error = True
 
   if error:
+    return errores
+
+def calcular_monto(es_alto_riesgo: bool, capital: float, plazo_meses: float):
+  errores = obtener_errores_de_capa_inferior(es_alto_riesgo, capital, plazo_meses)
+  
+  if errores != None:
     return [None, errores]
   
   return [calcular_monto_alto_riesgo(capital, plazo_meses) if es_alto_riesgo else calcular_monto_bajo_riesgo(capital, plazo_meses), None]

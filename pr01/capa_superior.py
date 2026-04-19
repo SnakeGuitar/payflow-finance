@@ -1,4 +1,26 @@
 from capa_media import generar_resultado
+from capa_inferior import obtener_errores_de_capa_inferior
+
+ERROR_CUENTA_NUEVA = "No se permiten inversiones de alto riesgo para cuentas nuevas"
+ERROR_CAPITAL_EXCEDIDO = "Rechazada por exceder el saldo disponible"
+
+def obtener_errores_de_capa_superior(es_alto_riesgo: bool, cuenta_nueva: bool, capital: float, saldo: float):
+  errores = {
+    "error-cuenta-nueva": None,
+    "error-capital-excedido": None,
+  }
+  error = False
+
+  if es_alto_riesgo and cuenta_nueva:
+    errores["error-cuenta-nueva"] = ERROR_CUENTA_NUEVA
+    error = True
+
+  if capital > saldo:
+    errores["error-capital-excedido"] = ERROR_CAPITAL_EXCEDIDO
+    error = True
+
+  if error:
+    return errores
 
 class Payflow:
   estado = "DISPONIBLE"
@@ -10,20 +32,14 @@ class Payflow:
     self.cuenta_nueva = cuenta_nueva
     
   def realizar_inversion(self, es_alto_riesgo: bool, capital: float, plazo_meses: float):
-    errores = {
-      "error-cuenta-nueva": None,
-      "error-capital-excedido": None,
-    }
+    errores = obtener_errores_de_capa_superior(es_alto_riesgo, self.cuenta_nueva, capital, self.saldo)
 
-    if es_alto_riesgo and self.cuenta_nueva:
-      self.estado = "RECHAZADA"
-      errores["error-cuenta-nueva"] = "No se permiten inversiones de alto riesgo para cuentas nuevas"
+    if errores != None:
+      errores_capa_inferior = obtener_errores_de_capa_inferior(es_alto_riesgo, capital, plazo_meses)
+      
+      if errores_capa_inferior != None:
+        errores.update(errores_capa_inferior)
 
-    if capital > self.saldo:
-      self.estado = "RECHAZADA"
-      errores["error-capital-excedido"] = "Rechazada por exceder el saldo disponible"
-
-    if self.estado == "RECHAZADA":
       return [None, errores]
 
     if es_alto_riesgo:

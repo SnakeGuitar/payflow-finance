@@ -1,4 +1,5 @@
-from capa_superior import Payflow
+from capa_superior import Payflow, ERROR_CUENTA_NUEVA, ERROR_CAPITAL_EXCEDIDO
+from capa_inferior import ERROR_PLAZO_INVALIDO, ERROR_CAPITAL_INVALIDO
 
 SALDO = 12_000
 DURACION_MESES_VALIDO = 12
@@ -17,50 +18,56 @@ def test_escenario_e1():
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None  
+  assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
+  assert errores["error-cuenta-nueva"] == ERROR_CUENTA_NUEVA
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
+  assert errores["error-capital-invalido"] == None
 
 def test_escenario_e2():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO_ARRIBA,  DURACION_MESES_VALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
+  assert errores["error-cuenta-nueva"] == ERROR_CUENTA_NUEVA
 
 def test_escenario_e3():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO  
 
 def test_escenario_e4():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_MESES_VALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
 
 def test_escenario_e5():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None  
+  assert errores["error-cuenta-nueva"] == ERROR_CUENTA_NUEVA
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
 
 def test_escenario_e6():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_VALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-cuenta-nueva"] == ERROR_CUENTA_NUEVA
 
 def test_escenario_e7():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
-
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
+  
 def test_escenario_e8():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_VALIDO)
@@ -70,25 +77,28 @@ def test_escenario_e8():
 
 def test_escenario_e9():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
-  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_INVALIDO)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_INVALIDO, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-cuenta-nueva"] == ERROR_CUENTA_NUEVA
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
+  assert errores["error-capital-invalido"] == ERROR_CAPITAL_INVALIDO
 
 def test_escenario_e10():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-cuenta-nueva"] == ERROR_CUENTA_NUEVA
 
 def test_escenario_e11():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
-  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_INVALIDO)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_INVALIDO, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
-
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
+  assert errores["error-capital-invalido"] == ERROR_CAPITAL_INVALIDO
+  
 def test_escenario_e12():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
@@ -101,35 +111,37 @@ def test_escenario_e13():
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
 
 def test_escenario_e14():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_MESES_VALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
 
 def test_escenario_e15():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
 
 def test_escenario_e16():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_MESES_VALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
 
 def test_escenario_e17():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
 
 def test_escenario_e18():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
@@ -143,7 +155,7 @@ def test_escenario_e19():
   [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
 
 def test_escenario_e20():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
@@ -154,10 +166,11 @@ def test_escenario_e20():
 
 def test_escenario_e21():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
-  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_INVALIDO)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_INVALIDO, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
+  assert errores["error-capital-invalido"] == ERROR_CAPITAL_INVALIDO
 
 def test_escenario_e22():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
@@ -168,10 +181,11 @@ def test_escenario_e22():
 
 def test_escenario_e23():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
-  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_INVALIDO)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_INVALIDO, DURACION_MESES_INVALIDO)
 
   assert folio == None
-  assert errores != None
+  assert errores["error-capital-invalido"] == ERROR_CAPITAL_INVALIDO
+  assert errores["error-plazo-invalido"] == ERROR_PLAZO_INVALIDO
 
 def test_escenario_e24():
   payflow = Payflow(SALDO, CUENTA_ANTIGUA)
