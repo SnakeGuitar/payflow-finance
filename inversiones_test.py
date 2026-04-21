@@ -2,6 +2,7 @@ from inversiones import Payflow, ERROR_CUENTA_NUEVA, ERROR_CAPITAL_EXCEDIDO
 from inversiones import calcular_monto, calcular_monto_alto_riesgo, calcular_monto_bajo_riesgo, ERROR_PLAZO_INVALIDO, ERROR_CAPITAL_INVALIDO
 
 # Test General
+
 SALDO = 12_000
 DURACION_MESES_VALIDO = 12
 DURACION_MESES_INVALIDO = 6
@@ -26,7 +27,7 @@ def test_escenario_e1():
 
 def test_escenario_e2():
   payflow = Payflow(SALDO, CUENTA_NUEVA)
-  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO_ARRIBA,  DURACION_MESES_VALIDO)
+  [folio, errores] = payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO_ARRIBA, DURACION_MESES_VALIDO)
 
   assert folio == None
   assert errores["error-capital-excedido"] == ERROR_CAPITAL_EXCEDIDO
@@ -207,6 +208,28 @@ def test_escenario_e24():
   assert folio == f"B-E-{int(inversion)}"
   assert errores == None
 
+def test_escenario_state_e1():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+
+  assert payflow.estado == "DISPONIBLE"
+
+def test_escenario_state_e2():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_VALIDO)
+
+  assert payflow.estado == "INVERSION_RIESGOSA"
+
+def test_escenario_state_e3():
+  payflow = Payflow(SALDO, CUENTA_ANTIGUA)
+  payflow.realizar_inversion(PERFIL_BAJO_RIESGO, CAPITAL_ESTABLE, DURACION_MESES_VALIDO)
+
+  assert payflow.estado == "INVERSION_ESTABLE"
+
+def test_escenario_state_e4():
+  payflow = Payflow(SALDO, CUENTA_NUEVA)
+  payflow.realizar_inversion(PERFIL_ALTO_RIESGO, CAPITAL_RIESGO, DURACION_MESES_VALIDO)
+
+  assert payflow.estado != "INVERSION_RIESGOSA" and payflow.estado != "INVERSION_ESTABLE" and payflow.estado != "DISPONIBLE" and payflow.estado == "RECHAZADA"
 
 # Test Capa Inferior
 

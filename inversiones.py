@@ -3,9 +3,11 @@ from math import ceil
 
 TASA_ALTO_RIESGO_ANUAL = 0.12
 TASA_BAJO_RIESGO_ANUAL = 0.05
+# Los errores para poder ser usados en las pruebas.
 ERROR_PLAZO_INVALIDO = "El plazo no puede ser menor a 1 año"
 ERROR_CAPITAL_INVALIDO = "El capital a invertir no puede ser negativo"
 
+# Se separa la capa inferior en funciones pequeñas para poder probar cada una de ellas de forma independiente.
 def calcular_monto_alto_riesgo(capital: float, plazo_meses: float):
   return ceil(capital * (1 + TASA_ALTO_RIESGO_ANUAL) ** plazo_meses)
 
@@ -13,6 +15,8 @@ def calcular_monto_bajo_riesgo(capital: float, plazo_meses: float):
   return ceil(capital * (1 + TASA_BAJO_RIESGO_ANUAL) ** plazo_meses)
 
 def obtener_errores_de_capa_inferior(capital: float, plazo_meses: float):
+  # Un diccionario con los errores de la capa inferior, si no hay errores, el valor de cada error es None.
+  # Se usa un diccionario para poder agregar los errores de la capa superior en caso de que existan, sin perder los errores de la capa inferior.
   errores = {
     "error-plazo-invalido": None,
     "error-capital-invalido": None
@@ -30,6 +34,7 @@ def obtener_errores_de_capa_inferior(capital: float, plazo_meses: float):
   if error:
     return errores
 
+# La función principal de la capa inferior, que se encarga de calcular el monto a invertir, dependiendo del perfil de riesgo del cliente, el capital a invertir y el plazo en meses.
 def calcular_monto(es_alto_riesgo: bool, capital: float, plazo_meses: float):
   errores = obtener_errores_de_capa_inferior(capital, plazo_meses)
   
@@ -52,6 +57,8 @@ def generar_resultado(es_alto_riesgo: bool, capital: float, plazo_años: float, 
 
 # Capa Superior
 def obtener_errores_de_capa_superior(es_alto_riesgo: bool, cuenta_nueva: bool, capital: float, saldo: float):
+  # Un diccionario con los errores de la capa superior, si no hay errores, el valor de cada error es None.
+  # Se usa un diccionario para poder agregar los errores de la capa inferior en caso de que existan, sin perder los errores de la capa superior.
   errores = {
     "error-cuenta-nueva": None,
     "error-capital-excedido": None,
@@ -87,6 +94,7 @@ class Payflow:
       if errores_capa_inferior != None:
         errores.update(errores_capa_inferior)
 
+      self.estado = "RECHAZADA"
       return [None, errores]
 
     if capital >= self.saldo / 2:
