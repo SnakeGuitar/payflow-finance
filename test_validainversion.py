@@ -36,8 +36,9 @@ class ValidadorInversión:
     if not es_monto_ideal and not es_plazo_largo:
       return ValidadorInversión.ESTADOS["RECHAZADA"]
 
-    if es_perfil_conservador and es_monto_ideal and es_plazo_largo:
-      return ValidadorInversión.ESTADOS["ACEPTADA"]
+    if es_perfil_conservador and es_monto_ideal:
+      return ValidadorInversión.ESTADOS["ACEPTADA"] if es_plazo_largo else ValidadorInversión.ESTADOS["REVISIÓN"]
+
 
 MONTO_NO_IDEAL = 5_000
 PLAZO_CORTO_EN_MESES = 6
