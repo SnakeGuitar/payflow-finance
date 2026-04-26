@@ -51,7 +51,7 @@ class TestPC01:
   def test_caso_de_prueba_03():
     assert ValidadorInversión.validar_inversión(
       ValidadorInversión.MONTO_IDEAL, 
-      TestPC01.PLAZO_CORTO_EN_MESES, 
+      PLAZO_CORTO_EN_MESES, 
       ValidadorInversión.PERFILES["RIESGOSO"]
     ) == ValidadorInversión.ESTADOS["ACEPTADA"]
   
@@ -72,3 +72,29 @@ class TestPC02:
       ValidadorInversión.PLAZO_LARGO_MINIMO_EN_MESES, 
       ValidadorInversión.PERFILES["RIESGOSO"]
     ) == ValidadorInversión.ESTADOS["REVISIÓN"]
+
+
+class TestPC03:
+  @staticmethod
+  def test_caso_de_prueba_01():
+    assert ValidadorInversión.validar_inversión(
+      MONTO_NO_IDEAL, 
+      ValidadorInversión.PLAZO_LARGO_MINIMO_EN_MESES, 
+      ValidadorInversión.PERFILES["CONSERVADOR"]
+    ) == ValidadorInversión.ESTADOS["ACEPTADA"]
+
+  @staticmethod
+  def test_caso_de_prueba_02():
+    assert ValidadorInversión.validar_inversión(
+      MONTO_NO_IDEAL, 
+      PLAZO_CORTO_EN_MESES, 
+      ValidadorInversión.PERFILES["RIESGOSO"]
+    ) == ValidadorInversión.ESTADOS["ACEPTADA"]
+
+  @staticmethod
+  def test_caso_de_prueba_03():
+    assert ValidadorInversión.validar_inversión(
+      MONTO_NO_IDEAL, 
+      PLAZO_CORTO_EN_MESES, 
+      ValidadorInversión.PERFILES["CONSERVADOR"]
+    ) == ValidadorInversión.ESTADOS["ACEPTADA"]
