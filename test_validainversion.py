@@ -25,11 +25,19 @@ class ValidadorInversión:
 
   @staticmethod
   def validar_inversión(monto: float, plazo_meses: float, perfil: str):
-    if ValidadorInversión.es_monto_ideal(monto) and perfil == ValidadorInversión.PERFILES["RIESGOSO"]:
-      return ValidadorInversión.ESTADOS["ACEPTADA"]
+    es_monto_ideal = ValidadorInversión.es_monto_ideal(monto)
+    es_plazo_largo = ValidadorInversión.es_plazo_largo(plazo_meses)
+    es_perfil_riesgoso = perfil == ValidadorInversión.PERFILES["RIESGOSO"]
+    es_perfil_conservador = perfil == ValidadorInversión.PERFILES["CONSERVADOR"]
 
-    if not ValidadorInversión.es_monto_ideal(monto) and not ValidadorInversión.es_plazo_largo(plazo_meses):
+    if es_monto_ideal and es_perfil_riesgoso:
+      return ValidadorInversión.ESTADOS["ACEPTADA"]
+    
+    if not es_monto_ideal and not es_plazo_largo:
       return ValidadorInversión.ESTADOS["RECHAZADA"]
+
+    if es_perfil_conservador and es_monto_ideal and es_plazo_largo:
+      return ValidadorInversión.ESTADOS["ACEPTADA"]
 
 MONTO_NO_IDEAL = 5_000
 PLAZO_CORTO_EN_MESES = 6
