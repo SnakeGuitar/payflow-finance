@@ -32,12 +32,15 @@ class ValidadorInversión:
 
     if es_monto_ideal and es_perfil_riesgoso:
       return ValidadorInversión.ESTADOS["ACEPTADA"]
-    
+
     if not es_monto_ideal and not es_plazo_largo:
       return ValidadorInversión.ESTADOS["RECHAZADA"]
 
     if es_perfil_conservador and es_monto_ideal:
       return ValidadorInversión.ESTADOS["ACEPTADA"] if es_plazo_largo else ValidadorInversión.ESTADOS["REVISIÓN"]
+
+    if not es_monto_ideal and es_plazo_largo:
+      return ValidadorInversión.ESTADOS["REVISIÓN"] if es_perfil_riesgoso else ValidadorInversión.ESTADOS["RECHAZADA"]
 
 
 MONTO_NO_IDEAL = 5_000
