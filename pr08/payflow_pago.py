@@ -10,7 +10,6 @@ class CuentaUsuario:
 
 
 class PagoCapaSuperior:
-  COMISION_FIJA = 15.0;
   CONCEPTOS = {
     "RENTA": "RENTA",
     "INTERNET": "INTERNET",
@@ -19,7 +18,7 @@ class PagoCapaSuperior:
 
   @staticmethod
   def es_pago_valido(monto: float, cuenta_usuario: CuentaUsuario) -> bool:
-    return monto + PagoCapaSuperior.COMISION_FIJA < cuenta_usuario.saldo_disponible
+    return PagoCapaInferior.calcular_monto_total(monto) <= cuenta_usuario.saldo_disponible
   
   @staticmethod
   def es_concepto_valido(concepto: str):
@@ -27,9 +26,15 @@ class PagoCapaSuperior:
   
 
 class PagoCapaInferior:
+  COMISION_FIJA = 15.0;
+
   @staticmethod
-  def calcular_nuevo_saldo(monto: float, cuenta_usuario: CuentaUsuario) -> float:
-    return cuenta_usuario.saldo_disponible - PagoCapaSuperior.COMISION_FIJA - monto
+  def calcular_monto_total(monto_base: float) -> float:
+    return monto_base + PagoCapaInferior.COMISION_FIJA
+
+  @staticmethod
+  def calcular_nuevo_saldo(monto_base: float, cuenta_usuario: CuentaUsuario) -> float:
+    return cuenta_usuario.saldo_disponible - PagoCapaInferior.calcular_monto_total(monto_base)
   
 
 class PagoCapaMedia:
