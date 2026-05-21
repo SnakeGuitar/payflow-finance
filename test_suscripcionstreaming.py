@@ -21,6 +21,9 @@ class SuscripcionStreaming:
     
     @staticmethod
     def es_transicion_valida(estado_actual: str, transicion: str) -> bool:
+        if not SuscripcionStreaming.es_estado_valido(estado_actual):
+            return False
+
         return transicion in SuscripcionStreaming.TRANSICIONES[estado_actual]
 
 
@@ -222,4 +225,18 @@ class TestPC04:
     def test_caso_de_prueba_30():  # C30: Cancelado + Cancelación → inválido
         assert SuscripcionStreaming.es_transicion_valida(
             SuscripcionStreaming.ESTADOS["CANCELADO"], CANCELACION
+        ) == False
+
+
+class TestEXP01:
+    @staticmethod
+    def test_caso_de_prueba_01():  # C31: Estado desconocido + Pago exitoso → inválido
+        assert SuscripcionStreaming.es_transicion_valida(
+            "ESTADO DESCONOCIDO", PAGO_EXITOSO
+        ) == False
+
+    @staticmethod
+    def test_caso_de_prueba_02():  # C32: Activo + Transición desconocida → inválido
+        assert SuscripcionStreaming.es_transicion_valida(
+            SuscripcionStreaming.ESTADOS["ACTIVO"], "TRANSICIÓN DESCONOCIDA"
         ) == False
