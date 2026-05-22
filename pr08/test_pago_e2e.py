@@ -30,3 +30,13 @@ class TestE2E:
     assert es_fallida == True
     assert folio == None
     assert cuenta_usuario.saldo_disponible == SALDO_INICIAL
+
+  @staticmethod
+  def test_pago_internet_sin_comision():
+    cuenta_usuario = CuentaUsuario("0", 1_000)
+    SALDO_FINAL = cuenta_usuario.saldo_disponible - 1_000
+    [es_fallida, folio] = Pago.realizar_pago(1_000, cuenta_usuario, PagoCapaSuperior.CONCEPTOS["INTERNET"])
+
+    assert es_fallida == False
+    assert folio.startswith("PAGO-INTERNET")
+    assert cuenta_usuario.saldo_disponible == SALDO_FINAL
