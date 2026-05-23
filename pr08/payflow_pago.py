@@ -17,7 +17,9 @@ class PagoCapaSuperior:
   }
 
   @staticmethod
-  def es_pago_valido(monto: float, cuenta_usuario: CuentaUsuario) -> bool:
+  def es_pago_valido(monto: float, cuenta_usuario: CuentaUsuario, concepto: str) -> bool:
+    if concepto == "INTERNET":
+      return PagoCapaInferior.calcular_monto_sin_comision(monto) <= cuenta_usuario.saldo_disponible
     return PagoCapaInferior.calcular_monto_total(monto) <= cuenta_usuario.saldo_disponible
   
   @staticmethod
@@ -26,15 +28,23 @@ class PagoCapaSuperior:
   
 
 class PagoCapaInferior:
-  COMISION_FIJA = 15.0;
+  COMISION_FIJA = 15.0
 
   @staticmethod
   def calcular_monto_total(monto_base: float) -> float:
     return monto_base + PagoCapaInferior.COMISION_FIJA
 
   @staticmethod
+  def calcular_monto_sin_comision(monto_base: float) -> float:
+    return monto_base
+
+  @staticmethod
   def calcular_nuevo_saldo(monto_base: float, cuenta_usuario: CuentaUsuario) -> float:
     return cuenta_usuario.saldo_disponible - PagoCapaInferior.calcular_monto_total(monto_base)
+
+  @staticmethod
+  def calcular_nuevo_saldo_sin_comision(monto_base: float, cuenta_usuario: CuentaUsuario) -> float:
+    return cuenta_usuario.saldo_disponible - PagoCapaInferior.calcular_monto_sin_comision(monto_base)
   
 
 class PagoCapaMedia:
@@ -48,8 +58,12 @@ class Pago:
     if not PagoCapaSuperior.es_concepto_valido(concepto):
       return [True, None]
     
-    if not PagoCapaSuperior.es_pago_valido(monto, cuenta_usuario):
+    if not PagoCapaSuperior.es_pago_valido(monto, cuenta_usuario, concepto):
       return [True, None]
+
+    if concepto == "INTERNET":
+      cuenta_usuario.saldo_disponible = PagoCapaInferior.calcular_nuevo_saldo_sin_comision(monto, cuenta_usuario)
+      return [False, PagoCapaMedia.generar_comprobante_pago(concepto)]
     
     cuenta_usuario.saldo_disponible = PagoCapaInferior.calcular_nuevo_saldo(monto, cuenta_usuario)
     return [False, PagoCapaMedia.generar_comprobante_pago(concepto)]
