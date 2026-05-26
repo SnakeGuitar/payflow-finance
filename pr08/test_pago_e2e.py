@@ -15,7 +15,7 @@ class TestE2E:
   def test_pago_insuficiente():
     SALDO_INICIAL = 1_010
     cuenta_usuario = CuentaUsuario("0", SALDO_INICIAL)
-    [es_fallida, folio] = Pago.realizar_pago(1000, cuenta_usuario, PagoCapaSuperior.CONCEPTOS["INTERNET"])
+    [es_fallida, folio] = Pago.realizar_pago(1000, cuenta_usuario, PagoCapaSuperior.CONCEPTOS["RENTA"])
 
     assert es_fallida == True
     assert folio == None
