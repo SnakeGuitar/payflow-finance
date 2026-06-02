@@ -21,21 +21,24 @@ class ValidadorInversión:
 
     @staticmethod
     def validar_inversión(monto: float, plazo_meses: float, perfil: str):
+        if perfil not in ValidadorInversión.PERFILES:
+            return ValidadorInversión.ESTADOS["RECHAZADA"]
+
         es_monto_ideal = ValidadorInversión.es_monto_ideal(monto)
         es_plazo_largo = ValidadorInversión.es_plazo_largo(plazo_meses)
         es_perfil_riesgoso = perfil == ValidadorInversión.PERFILES["RIESGOSO"]
-        es_perfil_conservador = perfil == ValidadorInversión.PERFILES["CONSERVADOR"]
 
-        if es_monto_ideal and es_perfil_riesgoso:
-            return ValidadorInversión.ESTADOS["ACEPTADA"]
+        # Tabla de verdad mapeada directamente (Complejidad Ciclomática = 2)
+        tabla_decision = {
+            (True, True, True): ValidadorInversión.ESTADOS["ACEPTADA"],      # Ideal + Largo + Riesgoso
+            (True, True, False): ValidadorInversión.ESTADOS["ACEPTADA"],     # Ideal + Largo + Conservador
+            (True, False, True): ValidadorInversión.ESTADOS["ACEPTADA"],     # Ideal + Corto + Riesgoso
+            (True, False, False): ValidadorInversión.ESTADOS["REVISIÓN"],    # Ideal + Corto + Conservador
+            (False, True, True): ValidadorInversión.ESTADOS["REVISIÓN"],     # No Ideal + Largo + Riesgoso
+            (False, True, False): ValidadorInversión.ESTADOS["RECHAZADA"],   # No Ideal + Largo + Conservador
+            (False, False, True): ValidadorInversión.ESTADOS["RECHAZADA"],   # No Ideal + Corto + Riesgoso
+            (False, False, False): ValidadorInversión.ESTADOS["RECHAZADA"]   # No Ideal + Corto + Conservador
+        }
 
-        if not es_monto_ideal and not es_plazo_largo:
-            return ValidadorInversión.ESTADOS["RECHAZADA"]
-
-        if es_perfil_conservador and es_monto_ideal:
-            return ValidadorInversión.ESTADOS["ACEPTADA"] if es_plazo_largo else ValidadorInversión.ESTADOS["REVISIÓN"]
-
-        if not es_monto_ideal and es_plazo_largo:
-            return ValidadorInversión.ESTADOS["REVISIÓN"] if es_perfil_riesgoso else ValidadorInversión.ESTADOS["RECHAZADA"]
-
-        return ValidadorInversión.ESTADOS["RECHAZADA"]
+        key = (es_monto_ideal, es_plazo_largo, es_perfil_riesgoso)
+        return tabla_decision.get(key, ValidadorInversión.ESTADOS["RECHAZADA"])
