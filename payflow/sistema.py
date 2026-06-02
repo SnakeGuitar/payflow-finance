@@ -62,11 +62,15 @@ class SistemaPayflow:
     def obtener_usuario(self, user_id):
         return self.db.get(user_id)
 
-    def crear_usuario(self, user_id, saldo_inicial, cuenta_nueva):
+    def crear_usuario(self, user_id, saldo_inicial, cuenta_nueva, edad=18, tiene_id=True):
         if user_id in self.db:
             return False, f"El usuario '{user_id}' ya existe."
         if saldo_inicial < 0:
             return False, "El saldo inicial no puede ser negativo."
+        
+        from .acceso import validar_registro
+        if validar_registro(edad, tiene_id) == "ACCESO_DENEGADO":
+            return False, "ACCESO_DENEGADO: Registro rechazado por edad o identificacion invalida."
         
         self.db[user_id] = {
             "id": user_id,

@@ -84,7 +84,17 @@ def menu_usuario(sistema):
         antiguedad_resp = input(f"{BOLD}¿Es cuenta nueva (< 3 meses de antiguedad)? (S/N): {RESET}").strip().upper()
         es_nueva = True if antiguedad_resp == 'S' else False
 
-        exito, err = sistema.crear_usuario(nuevo_id, saldo, es_nueva)
+        try:
+            edad = int(input(f"{BOLD}Edad del usuario: {RESET}"))
+        except ValueError:
+            print(f"{RED}[X] Edad invalida.{RESET}")
+            input(f"\nPresione Enter para continuar...")
+            return None
+
+        id_resp = input(f"{BOLD}¿Posee identificacion oficial valida? (S/N): {RESET}").strip().upper()
+        tiene_id = True if id_resp == 'S' else False
+
+        exito, err = sistema.crear_usuario(nuevo_id, saldo, es_nueva, edad, tiene_id)
         if exito:
             print(f"\n{GREEN}[OK] Usuario '{nuevo_id}' creado exitosamente.{RESET}")
             input(f"\nPresione Enter para continuar...")

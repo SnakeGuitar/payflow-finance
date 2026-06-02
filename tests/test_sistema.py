@@ -38,6 +38,18 @@ def test_crear_usuario(clean_db):
     assert exito is False
     assert err is not None
 
+def test_crear_usuario_acceso_denegado(clean_db):
+    sistema = clean_db
+    # Intento de menor de edad
+    exito, err = sistema.crear_usuario("Minor", 1000.0, False, edad=17, tiene_id=True)
+    assert exito is False
+    assert "ACCESO_DENEGADO" in err
+    
+    # Intento sin ID
+    exito, err = sistema.crear_usuario("NoID", 1000.0, False, edad=20, tiene_id=False)
+    assert exito is False
+    assert "ACCESO_DENEGADO" in err
+
 def test_pago_servicio_internet_sin_comision(clean_db):
     sistema = clean_db
     sistema.crear_usuario("TestUser", 1000.0, False)

@@ -14,6 +14,7 @@ El código está estructurado bajo estándares profesionales de empaquetado en P
 kata_payflow_next/
 ├── payflow/                    # 🐍 Código de Producción (Paquete Principal)
 │   ├── __init__.py             # Expone la API pública del sistema
+│   ├── acceso.py               # Lógica de validación de acceso al sistema (RF-01)
 │   ├── inversiones.py          # Lógica de cálculo de rendimientos y control de riesgos
 │   ├── pagos.py                # Gestión de pagos de servicios (Renta, Luz, Internet)
 │   ├── streaming.py            # Máquina de estados de suscripciones de streaming
@@ -21,6 +22,7 @@ kata_payflow_next/
 │   └── sistema.py              # Integrador de módulos y persistencia en disco
 │
 ├── tests/                      # 🧪 Suite de Pruebas Unificada
+│   ├── test_acceso.py          # Pruebas unitarias de acceso al sistema
 │   ├── test_inversiones.py     # Pruebas unitarias de inversión
 │   ├── test_pagos.py           # Pruebas unitarias de pagos
 │   ├── test_streaming.py       # Pruebas de transiciones de estados de streaming

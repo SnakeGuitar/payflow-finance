@@ -20,14 +20,7 @@ class ValidadorInversión:
         return plazo_meses >= ValidadorInversión.PLAZO_LARGO_MINIMO_EN_MESES
 
     @staticmethod
-    def es_perfil_valido(perfil: str) -> bool:
-        return perfil in ValidadorInversión.PERFILES
-
-    @staticmethod
     def validar_inversión(monto: float, plazo_meses: float, perfil: str):
-        if not ValidadorInversión.es_perfil_valido(perfil):
-            return ValidadorInversión.ESTADOS["RECHAZADA"]
-
         es_monto_ideal = ValidadorInversión.es_monto_ideal(monto)
         es_plazo_largo = ValidadorInversión.es_plazo_largo(plazo_meses)
         es_perfil_riesgoso = perfil == ValidadorInversión.PERFILES["RIESGOSO"]
