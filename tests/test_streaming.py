@@ -1,42 +1,6 @@
-class SuscripcionStreaming:
-    ESTADOS = {
-        "INACTIVO": "INACTIVO",
-        "ACTIVO": "ACTIVO",
-        "MORA": "MORA",
-        "SUSPENDIDO": "SUSPENDIDO",
-        "CANCELADO": "CANCELADO"
-    }
-    TRANSICIONES = {
-        "INACTIVO":   ["REGISTRO", "PAGO_EXITOSO", "CANCELACION"],
-        "ACTIVO":     ["PAGO_EXITOSO", "PAGO_VENCIDO", "CANCELACION"],
-        "MORA":       ["PAGO_EXITOSO", "PAGO_VENCIDO", "MORA_AGOTADA", "RECUPERACION", "CANCELACION"],
-        "SUSPENDIDO": ["PAGO_EXITOSO", "PAGO_VENCIDO", "MORA_AGOTADA", "RECUPERACION", "CANCELACION"],
-        "CANCELADO":  []
-    }
-    PERIODO_DE_GRACIA_EN_DIAS = 3
+from payflow.streaming import SuscripcionStreaming, REGISTRO, PAGO_EXITOSO, PAGO_VENCIDO, MORA_AGOTADA, RECUPERACION, CANCELACION
 
-    @staticmethod
-    def es_estado_valido(estado: str) -> bool:
-        return estado in SuscripcionStreaming.ESTADOS
-    
-    @staticmethod
-    def es_transicion_valida(estado_actual: str, transicion: str) -> bool:
-        if not SuscripcionStreaming.es_estado_valido(estado_actual):
-            return False
-
-        return transicion in SuscripcionStreaming.TRANSICIONES[estado_actual]
-
-
-# ── Entradas ───────────────────────────────────────────────────────────────────
-REGISTRO     = "REGISTRO"
-PAGO_EXITOSO = "PAGO_EXITOSO"
-PAGO_VENCIDO = "PAGO_VENCIDO"
-MORA_AGOTADA = "MORA_AGOTADA"
-RECUPERACION = "RECUPERACION"
-CANCELACION  = "CANCELACION"
-
-
-# ── PC01: Casos donde el resultado debe ser "ACCESO HABILITADO" ────────────────
+# PC01: Casos donde el resultado debe ser "ACCESO HABILITADO"
 class TestPC01:
     @staticmethod
     def test_caso_de_prueba_02():  # C2: Inactivo + Pago exitoso → Activo
@@ -75,7 +39,7 @@ class TestPC01:
         ) == True
 
 
-# ── PC02: Casos donde el resultado debe ser "ACCESO RESTRINGIDO" ───────────────
+# PC02: Casos donde el resultado debe ser "ACCESO RESTRINGIDO"
 class TestPC02:
     @staticmethod
     def test_caso_de_prueba_01():  # C1: Inactivo + Registro → Inactivo
@@ -114,7 +78,7 @@ class TestPC02:
         ) == True
 
 
-# ── PC03: Casos donde el resultado debe ser "CANCELACIÓN CONFIRMADA" ───────────
+# PC03: Casos donde el resultado debe ser "CANCELACIÓN CONFIRMADA"
 class TestPC03:
     @staticmethod
     def test_caso_de_prueba_03():  # C3: Inactivo + Cancelación → Cancelado
@@ -141,7 +105,7 @@ class TestPC03:
         ) == True
 
 
-# ── PC04: Casos donde el resultado debe ser "RECHAZADA" ───────────────────────
+# PC04: Casos donde el resultado debe ser "RECHAZADA"
 class TestPC04:
     @staticmethod
     def test_caso_de_prueba_17():  # C17: Inactivo + Pago vencido → inválido
@@ -238,5 +202,5 @@ class TestEXP01:
     @staticmethod
     def test_caso_de_prueba_02():  # C32: Activo + Transición desconocida → inválido
         assert SuscripcionStreaming.es_transicion_valida(
-            SuscripcionStreaming.ESTADOS["ACTIVO"], "TRANSICIÓN DESCONOCIDA"
+            SuscripcionStreaming.ESTADOS["ACTIVO"], "TRANSICION DESCONOCIDA"
         ) == False

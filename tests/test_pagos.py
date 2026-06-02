@@ -1,4 +1,4 @@
-from payflow_pago import CuentaUsuario, Pago, PagoCapaInferior, PagoCapaSuperior
+from payflow.pagos import CuentaUsuario, Pago, PagoCapaInferior, PagoCapaSuperior
 
 class TestE2E:
   @staticmethod
@@ -25,7 +25,7 @@ class TestE2E:
   def test_pago_concepto_invalido():
     SALDO_INICIAL = 1_010
     cuenta_usuario = CuentaUsuario("0", SALDO_INICIAL)
-    [es_fallida, folio] = Pago.realizar_pago(1000, cuenta_usuario, "MÉXICO")
+    [es_fallida, folio] = Pago.realizar_pago(1000, cuenta_usuario, "MEXICO")
 
     assert es_fallida == True
     assert folio == None

@@ -1,5 +1,5 @@
-from inversiones import Payflow, ERROR_CUENTA_NUEVA, ERROR_CAPITAL_EXCEDIDO
-from inversiones import calcular_monto, calcular_monto_alto_riesgo, calcular_monto_bajo_riesgo, ERROR_PLAZO_INVALIDO, ERROR_CAPITAL_INVALIDO
+from payflow.inversiones import Payflow, ERROR_CUENTA_NUEVA, ERROR_CAPITAL_EXCEDIDO
+from payflow.inversiones import calcular_monto, calcular_monto_alto_riesgo, calcular_monto_bajo_riesgo, ERROR_PLAZO_INVALIDO, ERROR_CAPITAL_INVALIDO
 
 # Test General
 
