@@ -181,3 +181,28 @@ class SistemaPayflow:
         if evento == "MORA_AGOTADA":
             return "SUSPENDIDO"
         return estado_actual
+
+    def realizar_transferencia(self, user_id, monto, hora, tipo_cuenta, token_activo=False):
+        user = self.obtener_usuario(user_id)
+        if not user:
+            return False, "Usuario no encontrado.", None
+
+        from .transferencia import Transferencia as TransferEngine
+        transfer_engine = TransferEngine(user["saldo_disponible"])
+        exito, msg = transfer_engine.procesar_transferencia(monto, hora, tipo_cuenta, token_activo)
+
+        if not exito:
+            return False, msg, user["saldo_disponible"]
+
+        user["saldo_disponible"] = transfer_engine.saldo_disponible
+        if "transferencias" not in user:
+            user["transferencias"] = []
+        
+        user["transferencias"].append({
+            "monto": monto,
+            "hora": hora,
+            "tipo_cuenta": tipo_cuenta,
+            "estado": transfer_engine.estado
+        })
+        self.save_db()
+        return True, msg, user["saldo_disponible"]

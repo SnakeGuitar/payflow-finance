@@ -150,3 +150,27 @@ def test_streaming_suscripcion_saldo_insuficiente(clean_db):
     assert "saldo insuficiente" in msg
     assert estado == "INACTIVO"
     assert sistema.obtener_usuario("TestUser")["saldo_disponible"] == 50.0
+
+def test_sistema_realizar_transferencia_exitosa(clean_db):
+    sistema = clean_db
+    sistema.crear_usuario("TestUser", 10000.0, False)
+    
+    # Transferencia Crédito en horario permitido
+    exito, msg, saldo = sistema.realizar_transferencia("TestUser", 2000.0, 10, "Crédito")
+    assert exito is True
+    assert saldo == 8000.0
+    
+    user = sistema.obtener_usuario("TestUser")
+    assert len(user.get("transferencias", [])) == 1
+    assert user["transferencias"][0]["monto"] == 2000.0
+    assert user["transferencias"][0]["estado"] == "APROBADA"
+
+def test_sistema_realizar_transferencia_fallida(clean_db):
+    sistema = clean_db
+    sistema.crear_usuario("TestUser", 1000.0, False)
+    
+    # Transferencia Crédito en horario no permitido (ej: 8 AM)
+    exito, msg, saldo = sistema.realizar_transferencia("TestUser", 200.0, 8, "Crédito")
+    assert exito is False
+    assert saldo == 1000.0
+    assert "permiten de 09:00 a 18:00" in msg

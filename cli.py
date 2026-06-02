@@ -356,7 +356,79 @@ def ver_estado_detallado(sistema, usuario_actual):
             tipo = "Alto Riesgo" if inv["es_alto_riesgo"] else "Bajo Riesgo"
             print(f"  {inv['folio']:<20} | ${inv['capital']:<11.2f} | {inv['plazo_meses']:<6}m | {tipo:<12} | {inv['estado']}")
 
+    # Historial de Transferencias Bancarias
+    print(f"\n{BOLD}{CYAN}--- HISTORIAL DE TRANSFERENCIAS BANCARIAS ---{RESET}")
+    if "transferencias" not in user or not user["transferencias"]:
+        print("  Ninguna transferencia registrada.")
+    else:
+        print(f"  {'Tipo Destino':<15} | {'Monto':<12} | {'Hora':<6} | {'Estado'}")
+        print(f"  " + "-" * 50)
+        for t in user["transferencias"]:
+            print(f"  {t['tipo_cuenta']:<15} | ${t['monto']:<11.2f} | {t['hora']:02}:00  | {t['estado']}")
+
     input(f"\nPresione Enter para regresar al menu...")
+
+def menu_transferencia(sistema, usuario_actual):
+    if not usuario_actual:
+        print(f"\n{RED}[X] Debe seleccionar un usuario primero.{RESET}")
+        input(f"\nPresione Enter para continuar...")
+        return
+
+    limpiar_pantalla()
+    imprimir_dashboard(sistema, usuario_actual)
+    imprimir_header("REALIZAR TRANSFERENCIA BANCARIA")
+
+    try:
+        monto = float(input(f"{BOLD}Monto a transferir: ${RESET}"))
+        if monto <= 0:
+            print(f"{RED}[X] El monto debe ser mayor a 0.{RESET}")
+            input(f"\nPresione Enter para continuar...")
+            return
+    except ValueError:
+        print(f"{RED}[X] Monto invalido.{RESET}")
+        input(f"\nPresione Enter para continuar...")
+        return
+
+    try:
+        hora = int(input(f"{BOLD}Hora de la transferencia (0-23 hrs): {RESET}"))
+        if hora < 0 or hora > 23:
+            print(f"{RED}[X] Hora fuera de rango.{RESET}")
+            input(f"\nPresione Enter para continuar...")
+            return
+    except ValueError:
+        print(f"{RED}[X] Hora invalida.{RESET}")
+        input(f"\nPresione Enter para continuar...")
+        return
+
+    print(f"\n{BOLD}Seleccione el tipo de cuenta destino:{RESET}")
+    print(f"  {CYAN}[1]{RESET} Misma Cuenta (Mismo Banco)")
+    print(f"  {CYAN}[2]{RESET} Cuenta de Debito (Limite $5,000 sin token)")
+    print(f"  {CYAN}[3]{RESET} Cuenta de Credito (Horario de 09:00 a 18:00 hrs)")
+    op = input(f"\n{BOLD}Seleccione una opcion: {RESET}").strip()
+
+    tipos_map = {'1': "Misma", '2': "Débito", '3': "Crédito"}
+    tipo_cuenta = tipos_map.get(op)
+    if not tipo_cuenta:
+        print(f"{RED}[X] Opcion invalida.{RESET}")
+        input(f"\nPresione Enter para continuar...")
+        return
+
+    token_activo = False
+    if tipo_cuenta == "Débito" and monto > 5000.0:
+        token_resp = input(f"{BOLD}¿Posee token activo en la app? (S/N): {RESET}").strip().upper()
+        token_activo = True if token_resp == 'S' else False
+
+    # Ejecutar la transferencia
+    exito, msg, saldo_act = sistema.realizar_transferencia(usuario_actual, monto, hora, tipo_cuenta, token_activo)
+    if exito:
+        print(f"\n{GREEN}[OK] ¡Transferencia procesada y APROBADA!{RESET}")
+        print(f"  {msg}")
+        print(f"  {BOLD}Nuevo Saldo Disponible:{RESET} ${saldo_act:,.2f}")
+    else:
+        print(f"\n{RED}[X] Transferencia RECHAZADA por politicas de control:{RESET}")
+        print(f"  {msg}")
+
+    input(f"\nPresione Enter para continuar...")
 
 def main():
     sistema = SistemaPayflow()
@@ -378,9 +450,10 @@ def main():
         print(f"  {CYAN}[3]{RESET} Realizar Pago de Servicio (Renta, Luz, Internet)")
         print(f"  {CYAN}[4]{RESET} Simulador y Registro de Inversion")
         print(f"  {CYAN}[5]{RESET} Gestionar Suscripcion de Streaming")
-        print(f"  {RED}[6]{RESET} Salir de la Aplicacion")
+        print(f"  {CYAN}[6]{RESET} Realizar Transferencia Bancaria")
+        print(f"  {RED}[7]{RESET} Salir de la Aplicacion")
 
-        opcion = input(f"\n{BOLD}Seleccione una opcion (1-6): {RESET}").strip()
+        opcion = input(f"\n{BOLD}Seleccione una opcion (1-7): {RESET}").strip()
 
         if opcion == '1':
             limpiar_pantalla()
@@ -396,6 +469,8 @@ def main():
         elif opcion == '5':
             menu_suscripcion_streaming(sistema, usuario_actual)
         elif opcion == '6':
+            menu_transferencia(sistema, usuario_actual)
+        elif opcion == '7':
             print(f"\n{GREEN}Gracias por utilizar el MVP de Payflow Finance. ¡Hasta pronto!{RESET}\n")
             break
         else:

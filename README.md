@@ -14,18 +14,20 @@ El código está estructurado bajo estándares profesionales de empaquetado en P
 kata_payflow_next/
 ├── payflow/                    # 🐍 Código de Producción (Paquete Principal)
 │   ├── __init__.py             # Expone la API pública del sistema
-│   ├── acceso.py               # Lógica de validación de acceso al sistema (RF-01)
-│   ├── inversiones.py          # Lógica de cálculo de rendimientos y control de riesgos
-│   ├── pagos.py                # Gestión de pagos de servicios (Renta, Luz, Internet)
-│   ├── streaming.py            # Máquina de estados de suscripciones de streaming
+│   ├── acceso_seguridad.py     # Lógica de validación de acceso al sistema (RF-01)
+│   ├── inversiones.py          # Lógica de cálculo de rendimientos y control de riesgos (RF-05, RF-06, RF-07)
+│   ├── transaccion.py          # Gestión de pagos de servicios (Renta, Luz, Internet)
+│   ├── suscripcion_streaming.py # Máquina de estados de suscripciones de streaming (RF-02)
+│   ├── transferencia.py        # Módulo de transferencias bancarias (RF-04)
 │   ├── validador.py            # Validador bancario de perfiles de inversión
 │   └── sistema.py              # Integrador de módulos y persistencia en disco
 │
 ├── tests/                      # 🧪 Suite de Pruebas Unificada
-│   ├── test_acceso.py          # Pruebas unitarias de acceso al sistema
+│   ├── test_acceso_seguridad.py # Pruebas unitarias de acceso al sistema
 │   ├── test_inversiones.py     # Pruebas unitarias de inversión
-│   ├── test_pagos.py           # Pruebas unitarias de pagos
-│   ├── test_streaming.py       # Pruebas de transiciones de estados de streaming
+│   ├── test_transaccion.py     # Pruebas unitarias de pagos/transacciones
+│   ├── test_suscripcion_streaming.py # Pruebas de transiciones de estados de streaming
+│   ├── test_transferencia.py   # Pruebas de transferencias bancarias
 │   ├── test_validador.py       # Pruebas del calificador bancario
 │   └── test_sistema.py         # Pruebas de integración del flujo de sistema
 │
@@ -70,16 +72,17 @@ python cli.py
 
 El CLI es completamente interactivo y te permite:
 * Crear y alternar entre usuarios (`Alice`, `Bob`, `Charlie`).
-* Ver reportes financieros detallados con tablas de historial de transacciones e inversiones.
+* Ver reportes financieros detallados con tablas de historial de transacciones, inversiones y transferencias bancarias.
 * Realizar pagos de servicios con **descuento del 100% en comisión fija ($0.00) para el concepto INTERNET**.
 * Simular rendimientos de inversiones de bajo/alto riesgo y registrarlas en tiempo real.
 * Controlar y avanzar los estados de suscripciones de streaming (`ACTIVO`, `MORA`, `SUSPENDIDO`, etc.) disparando eventos de cobros automáticos.
+* Realizar transferencias bancarias interbancarias (`Débito`, `Crédito`) y al mismo banco (`Misma`), aplicando validación automática de límite y token de seguridad o restricciones de horario.
 
 ---
 
 ## 🧪 Comandos Útiles de Pruebas y Métricas
 
-La suite de pruebas contiene **93 casos de prueba** que garantizan la integridad del sistema financiero.
+La suite de pruebas contiene **108 casos de prueba** que garantizan la integridad del sistema financiero.
 
 ### 1. Ejecutar la Suite de Pruebas
 Ejecuta todos los archivos de prueba estructurados dentro de la carpeta `tests/`:
