@@ -1,4 +1,4 @@
-from payflow.pagos import CuentaUsuario, Pago, PagoCapaInferior, PagoCapaSuperior
+from payflow.transaccion import CuentaUsuario, Pago, PagoCapaInferior, PagoCapaSuperior
 
 class TestE2E:
   @staticmethod

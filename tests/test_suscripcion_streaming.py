@@ -1,4 +1,4 @@
-from payflow.streaming import SuscripcionStreaming, REGISTRO, PAGO_EXITOSO, PAGO_VENCIDO, MORA_AGOTADA, RECUPERACION, CANCELACION
+from payflow.suscripcion_streaming import SuscripcionStreaming, REGISTRO, PAGO_EXITOSO, PAGO_VENCIDO, MORA_AGOTADA, RECUPERACION, CANCELACION
 
 # PC01: Casos donde el resultado debe ser "ACCESO HABILITADO"
 class TestPC01:

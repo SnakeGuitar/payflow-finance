@@ -2,8 +2,8 @@ import json
 import os
 from .inversiones import Payflow as InversionPayflow
 from .validador import ValidadorInversión
-from .streaming import SuscripcionStreaming
-from .pagos import Pago as PagoService, CuentaUsuario
+from .suscripcion_streaming import SuscripcionStreaming
+from .transaccion import Pago as PagoService, CuentaUsuario
 
 DB_FILE = "payflow_db.json"
 
@@ -68,7 +68,7 @@ class SistemaPayflow:
         if saldo_inicial < 0:
             return False, "El saldo inicial no puede ser negativo."
         
-        from .acceso import validar_registro
+        from .acceso_seguridad import validar_registro
         if validar_registro(edad, tiene_id) == "ACCESO_DENEGADO":
             return False, "ACCESO_DENEGADO: Registro rechazado por edad o identificacion invalida."
         
@@ -92,7 +92,7 @@ class SistemaPayflow:
         es_fallido, comprobante = PagoService.realizar_pago(monto, cuenta, concepto)
 
         if es_fallido:
-            from .pagos import PagoCapaSuperior
+            from .transaccion import PagoCapaSuperior
             if not PagoCapaSuperior.es_concepto_valido(concepto):
                 err = f"Concepto de pago '{concepto}' no es valido."
             else:

@@ -1,4 +1,4 @@
-from payflow.acceso import validar_registro
+from payflow.acceso_seguridad import validar_registro
 
 def test_validar_registro_exitoso():
     # Edad >= 18 Y tiene_id = True -> ACCESO_CONCEDIDO
